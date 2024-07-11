@@ -305,6 +305,7 @@
                 .then(response => {
                     if (response.ok) {
                         alert('User created successfully');
+                        window.location.href = `/preferences.html?name=${jsonData.name}`;
                         // Redirect to sign-in page or perform other actions
                     } else if (response.status === 400) {
                         // Email already exists
