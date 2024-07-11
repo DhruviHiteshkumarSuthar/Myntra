@@ -9,7 +9,7 @@ const username = "apikey-v2-2e5kdlgplmovp6jb5xfuok6afjra827zegiyhiw2ul1u";
 const password = "d32ec5f34b80eec562777356d8d80d1b";
 
 const cloudant = Cloudant({ url: url, username: username, password: password });
-const usersDB = cloudant.use('users');
+const usersDB = cloudant.use('myntra_users');
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
