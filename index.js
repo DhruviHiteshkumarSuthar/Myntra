@@ -46,7 +46,6 @@ app.post('/signin', (req, res) => {
 
   usersDB.get(name, (err, body) => {
     if (!err && body) {
-      // User found, check password
       if (body.upassword === upassword) {
         console.log('Sign in successful:', name);
         res.redirect(`/home.html?name=${name}`);
@@ -61,6 +60,28 @@ app.post('/signin', (req, res) => {
     } else {
       console.error('Error getting user:', err);
       res.status(500).send('Error checking user');
+    }
+  });
+});
+
+app.post('/save-preferences', (req, res) => {
+  const { name, brands, categories, patterns } = req.body;
+
+  const userPrefDB = cloudant.use('user_pref');
+
+  const preferences = [
+    ...brands.map(brand => ({ _id: `${name}-${brand}`, user: name, preference: brand })),
+    ...categories.map(category => ({ _id: `${name}-${category}`, user: name, preference: category })),
+    ...patterns.map(pattern => ({ _id: `${name}-${pattern}`, user: name, preference: pattern }))
+  ];
+
+  userPrefDB.bulk({ docs: preferences }, (err, result) => {
+    if (err) {
+      console.error('Error saving preferences:', err);
+      res.status(500).send('Error saving preferences');
+    } else {
+      console.log('Preferences saved successfully:', name);
+      res.status(200).send('Preferences saved successfully');
     }
   });
 });
