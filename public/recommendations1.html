@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recommendations</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<style>
+  .product {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+  }
+  .product img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Recommended Products</h1>
+    </div>
+    
+    <div class="filter">
+      <label>
+        <input type="radio" name="gender" value="Men" checked> Men
+      </label>
+      <label>
+        <input type="radio" name="gender" value="Women"> Women
+      </label>
+    </div>
+
+    <div id="recommendations" class="row">
+      <!-- Recommendations will be dynamically added here -->
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name');
+
+      const fetchRecommendations = (gender) => {
+        fetch(`/recommendations?name=${name}&gender=${gender}`)
+          .then(response => response.json())
+          .then(data => {
+            const recommendationsContainer = document.getElementById('recommendations');
+            recommendationsContainer.innerHTML = ''; // Clear previous recommendations
+            data.forEach(item => {
+              const product = item.product;
+              const productElement = document.createElement('div');
+              productElement.classList.add('col-md-4', 'product');
+              productElement.innerHTML = `
+                <img src="/photo/${product.Product_id}.png" alt="${product.Product}">
+                <h5>${product.Product}</h5>
+                <p>Brand: ${product.Brand}</p>
+                <p>Gender: ${product.Gender}</p>
+                <p>Category: ${product.Category}</p>
+                <p>Pattern: ${product.Print_or_Pattern_Type}</p>
+                <p>Size Options: ${product.Size_Options}</p>
+                <p>Price: Rs. ${product.Original_Price}</p>
+                <p>Discount: ${product.Discount}</p>
+                <p>Ratings: ${product.Ratings}</p>
+                <p>Trend Credibility Score: ${item.score}%</p>
+              `;
+              recommendationsContainer.appendChild(productElement);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching recommendations:', error);
+          });
+      };
+
+      // Initial fetch with default gender
+      fetchRecommendations('Men');
+
+      // Add event listeners for radio buttons
+      document.querySelectorAll('input[name="gender"]').forEach(radio => {
+        radio.addEventListener('change', (event) => {
+          fetchRecommendations(event.target.value);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

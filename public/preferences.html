@@ -76,6 +76,19 @@
         <!-- Patterns items will be dynamically added here -->
       </div>
     </div>
+    <div class="section">
+      <div class="section-heading">Rank the Parameters</div>
+      <div class="item-container">
+        <label for="brand-rank">Brand:</label>
+        <input type="number" id="brand-rank" name="brand-rank" min="1" max="4">
+        <label for="price-rank">Price:</label>
+        <input type="number" id="price-rank" name="price-rank" min="1" max="4">
+        <label for="pattern-rank">Print & Pattern:</label>
+        <input type="number" id="pattern-rank" name="pattern-rank" min="1" max="4">
+        <label for="category-rank">Category:</label>
+        <input type="number" id="category-rank" name="category-rank" min="1" max="4">
+      </div>
+    </div>
     <button class="submit-btn" id="submit-btn">Submit</button>
   </div>
   <script>
@@ -95,21 +108,7 @@
         { name: 'Bewakoof', image: 'Bewakoof.png' },
         { name: 'CURVY STREET', image: 'CURVY_STREET.png' },
         { name: 'Roadster', image: 'Roadster.png' },
-        { name: 'DressBerry', image: 'DressBerry.png' },
-        { name: 'BAESD', image: 'BAESD.png' },
-        { name: 'KASSUALLY', image: 'KASSUALLY.png' },
-        { name: 'Mast & Harbour', image: 'Mast_&_Harbour.png' },
-        { name: 'FOREVER 21', image: 'FOREVER_21.png' },
-        { name: 'Inddus', image: 'Inddus.png' },
-        { name: 'Styli', image: 'Roadster.png' },
-        { name: 'Veni Vidi Vici', image: 'Veni_Vidi_Vici.png' },
-        { name: 'Stylecast', image: 'Stylecast.png' },
-        { name: 'Puma', image: 'Puma.png' },
-        { name: 'HIGHLANDER', image: 'HIGHLANDER.png' },
-        { name: 'DENNISON', image: 'DENNISON.png' },
-        { name: 'WROGN', image: 'WROGN.png' },
-        { name: 'HRX', image: 'HRX.png' },
-        { name: 'boohooMAN', image: 'boohooMAN.png' },
+        { name: 'DressBerry', image: 'DressBerry.png' }
         // Add more brands here
       ];
       const categories = [
@@ -117,7 +116,7 @@
         { name: 'Western', image: 'Western.png' },
         { name: 'Plus Size', image: 'Plus_Size.png' },
         { name: 'Formal', image: 'Formal.png' },
-        { name: 'Active Wear', image: 'Active_Wear.png' },
+        { name: 'Active Wear', image: 'Active_Wear.png' }
         // Add more categories here
       ];
       const patterns = [
@@ -130,13 +129,13 @@
         { name: 'Tie and Dye', image: 'Tie_and_Dye.png' },
         { name: 'Bandhani', image: 'Bandhani.png' },
         { name: 'Faded', image: 'Faded.png' },
-        { name: 'Striped', image: 'striped.png' },
+        { name: 'Striped', image: 'striped.png' }
         // Add more patterns here
       ];
 
-      const brandContainer = document.getElementById('brands');
-      const categoryContainer = document.getElementById('categories');
-      const patternContainer = document.getElementById('patterns');
+      // const brandContainer = document.getElementById('brands');
+      // const categoryContainer = document.getElementById('categories');
+      // const patternContainer = document.getElementById('patterns');
 
       function createItemContainer(items, containerId) {
         const container = document.getElementById(containerId);
@@ -168,11 +167,22 @@
           return;
         }
 
+        const brandRank = document.getElementById('brand-rank').value;
+        const priceRank = document.getElementById('price-rank').value;
+        const patternRank = document.getElementById('pattern-rank').value;
+        const categoryRank = document.getElementById('category-rank').value;
+
         const preferences = {
           name: name,
           brands: selectedBrands,
           categories: selectedCategories,
-          patterns: selectedPatterns
+          patterns: selectedPatterns,
+          ranks: {
+            brand: brandRank,
+            price: priceRank,
+            pattern: patternRank,
+            category: categoryRank
+          }
         };
 
         fetch('/save-preferences', {
@@ -185,7 +195,7 @@
         .then(response => {
           if (response.ok) {
             alert('Preferences saved successfully');
-            window.location.href = `/home.html?name=${name}`;
+            window.location.href = `/recommendations.html?name=${name}`;
           } else {
             alert('Error saving preferences');
           }

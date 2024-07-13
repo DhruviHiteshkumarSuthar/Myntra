@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -70,11 +71,15 @@
         }
 
         .nav-link:hover {
+            
             color:#292b96;
             text-decoration: underline;
             text-underline-offset: 0.75rem;
         }
 
+        .active{
+            color: dodgerblue;
+        }
         .user-menu {
             display: flex;
             overflow: hidden;
@@ -133,6 +138,7 @@
             display: grid;
             gap: 2rem;
             padding: 0 1rem;
+            
         }
 
         @media (min-width: 1024px) {
@@ -148,9 +154,10 @@
             aspect-ratio: 16 / 9;
             overflow: hidden;
             border-radius: 0.75rem;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
             max-width: 100%;
+            box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.192);
         }
 
         .content-text {
@@ -211,8 +218,8 @@
                 <span class="logo-text">Myntra</span>
             </a>
             <nav class="nav">
-                <a class="nav-link" href="#" rel="ugc">Home</a>
-                <a class="nav-link" href="#" rel="ugc">Recommendation Page</a>
+                <a class="nav-link active" id="home-button" rel="ugc">Home</a>
+                <a class="nav-link " id="recommend-button" rel="ugc">Recommendation Page</a>
                 <a class="nav-link" href="#" rel="ugc">Outfit Builder</a>
             </nav>
             <span class="user-menu">
@@ -230,14 +237,14 @@
             <section class="content-section">
                 <div class="container">
                     <div>
-                        <img src="/placeholder.svg" alt="Recommendations" class="content-img" />
+                        <img src="/2.jpeg" alt="Recommendations" class="content-img" />
                     </div>
                     <div class="content-text">
                         <div>
                             <h2 class="content-title">Personalized Recommendations</h2>
                             <p class="content-description">Get tailored fashion recommendations based on your style and preferences.</p>
                         </div>
-                        <a class="button" href="#" rel="ugc">Explore Recommendations</a>
+                        <a class="button" id="explore-button" rel="ugc">Explore Recommendations</a>
                     </div>
                 </div>
             </section>
@@ -251,11 +258,24 @@
                         <a class="button" href="#" rel="ugc">Try Outfit Builder</a>
                     </div>
                     <div>
-                        <img src="/placeholder.svg" alt="Outfit Builder" class="content-img" />
+                        <img src="/3.jpeg" alt="Outfit Builder" class="content-img" />
                     </div>
                 </div>
             </section>
         </main>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+
+            // Set the button's href to include the name parameter
+            if (name) {
+                document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
+                document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
+                document.getElementById('explore-button').setAttribute('href', `/recommendations.html?name=${name}`);
+            }
+        });
+    </script>
 </body>
 </html>

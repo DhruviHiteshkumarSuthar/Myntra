@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Store - Recommendation Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .min-h-dvh {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: white;
+            padding: 0 1rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            display: flex;
+            overflow: hidden;
+            border-radius: 50%;
+            height: 2.25rem;
+            width: 2.25rem;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 5rem;
+        }
+
+        .nav-link {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #292b96;
+            text-decoration: underline;
+            text-underline-offset: 0.75rem;
+        }
+
+        .active {
+            color: dodgerblue;
+        }
+
+        .user-menu {
+            display: flex;
+            overflow: hidden;
+            border-radius: 50%;
+            height: 2.25rem;
+            width: 2.25rem;
+        }
+
+        .user-menu img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recommendation-page {
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .radio-group label {
+            font-size: 1.1rem;
+            color: #1f2937;
+        }
+
+        .product-cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .product-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 1rem; /* Add padding for spacing */
+    width: 300px; /* Set a fixed width for all cards */
+    max-height: 550px; /* Set a max height */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to the top */
+    text-align: left; /* Left align text */
+    overflow: hidden; /* Hide overflow content */
+}
+
+.product-image {
+    width: 100%; /* Full width of the card */
+    height: 300px; /* Fixed height for images */
+    border-radius: 0.5rem;
+    object-fit: cover; /* Maintain aspect ratio */
+    object-position: top;
+    margin-bottom: 1rem; /* Space below image */
+}
+
+.product-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0.5rem 0; /* Add spacing above and below */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
+}
+
+.product-price {
+    font-size: 1.25rem;
+    color: #292b96; /* Primary color */
+    margin: 0.5rem 0; /* Space for readability */
+}
+
+.product-brand, .product-category, .product-sizes, .product-rates, .product-score {
+    font-size: 0.9rem; /* Slightly smaller font size */
+    color: #777; /* Grey color for secondary text */
+    margin: 0.2rem 0; /* Spacing for clarity */
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center; /* Center buttons */
+    margin-top: auto; /* Push buttons to the bottom */
+    gap: 1rem; /* Space between buttons */
+}
+
+.like-btn, .dislike-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.like-btn i {
+    color: #e74c3c;
+}
+
+.dislike-btn i {
+    color: #bdc3c7;
+}
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex-col min-h-dvh">
+        <header class="header">
+            <a class="logo" href="#" rel="ugc">
+                <span class="logo-img">
+                    <img class="aspect-square" src="/1.png" />
+                    <span class="sr-only">Toggle user menu</span>
+                </span>
+                <span class="logo-text">Myntra</span>
+            </a>
+            <nav class="nav">
+                <a class="nav-link " id="home-button" rel="ugc">Home</a>
+                <a class="nav-link active" id="recommend-button" rel="ugc">Recommendation Page</a>
+                <a class="nav-link" href="#" rel="ugc">Outfit Builder</a>
+            </nav>
+            <span class="user-menu">
+                <img class="aspect-square" src="/4.png" />
+                <span class="sr-only">Toggle user menu</span>
+            </span>
+        </header>
+
+        <main class="recommendation-page">
+            <h1 class="page-title">Fashion Recommendations</h1>
+            <div class="filter">
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="gender" value="Men" checked>
+                        Men
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="Women">
+                        Women
+                    </label>
+                </div>
+            </div>
+            
+            <div id="recommendations" class="product-cards-container">
+                <!-- Recommendations will be dynamically added here -->
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const name = urlParams.get('name');
+
+          if (name) {
+                document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
+                document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
+            }
+    
+          const fetchRecommendations = (gender) => {
+            fetch(`/recommendations?name=${name}&gender=${gender}`)
+              .then(response => response.json())
+              .then(data => {
+                const recommendationsContainer = document.getElementById('recommendations');
+                recommendationsContainer.innerHTML = ''; // Clear previous recommendations
+                data.forEach(item => {
+                  const product = item.product;
+                  const productElement = document.createElement('div');
+                //   productElement.classList.add('col-md-2', 'product');
+                productElement.classList.add('product');
+                  productElement.innerHTML = `
+                    <div class="product-card">
+                    <img src="/photo/${product.Product_id}.png" alt="${product.Product}" class="product-image">
+                    <h3 class="product-name">${product.Product}</h3>
+                    <p class="product-brand">${product.Brand}</p>
+                    <p class="product-price text">Rs. ${product.Original_Price} &nbsp; ${product.Discount} off</p>
+                    <p class="product-category text">${product.Category}</p>
+                    <p class="product-sizes text">${product.Size_Options}</p>
+                    <p class="product-rates text">${product.Ratings}</p>
+                    <div class="action-buttons">
+                        <button class="like-btn"><i class="fas fa-heart"></i></button>
+                        <button class="dislike-btn"><i class="fas fa-heart-broken"></i></button>
+                    </div>
+                </div>
+                  `;
+                  recommendationsContainer.appendChild(productElement);
+                });
+              })
+              .catch(error => {
+                console.error('Error fetching recommendations:', error);
+              });
+          };
+    
+          // Initial fetch with default gender
+          fetchRecommendations('Men');
+    
+          // Add event listeners for radio buttons
+          document.querySelectorAll('input[name="gender"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+              fetchRecommendations(event.target.value);
+            });
+          });
+        });
+      </script>
+</body>
+</html>
