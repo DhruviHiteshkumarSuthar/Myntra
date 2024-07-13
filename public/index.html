@@ -336,7 +336,7 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        alert('Sign in successful');
+                        // alert('Sign in successful');
                         window.location.href = `/home.html?name=${jsonData.name}`;
                     } else if (response.status === 400) {
                         alert('Invalid email or password');
