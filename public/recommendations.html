@@ -215,7 +215,7 @@
             <nav class="nav">
                 <a class="nav-link " id="home-button" rel="ugc">Home</a>
                 <a class="nav-link active" id="recommend-button" rel="ugc">Recommendation Page</a>
-                <a class="nav-link" href="/outfitbuilder.html" rel="ugc">Outfit Builder</a>
+                <a class="nav-link" id="outfit-button" rel="ugc">Outfit Builder</a>
             </nav>
             <span class="user-menu">
                 <img class="aspect-square" src="/4.png" />
@@ -251,6 +251,7 @@
           if (name) {
                 document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
                 document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
+                document.getElementById('outfit-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
             }
     
           const fetchRecommendations = (gender) => {

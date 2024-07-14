@@ -220,7 +220,7 @@
             <nav class="nav">
                 <a class="nav-link active" id="home-button" rel="ugc">Home</a>
                 <a class="nav-link " id="recommend-button" rel="ugc">Recommendation Page</a>
-                <a class="nav-link" href="/outfitbuilder.html" rel="ugc">Outfit Builder</a>
+                <a class="nav-link" id="outfit-button" rel="ugc">Outfit Builder</a>
             </nav>
             <span class="user-menu">
                 <img class="aspect-square" src="/4.png" />
@@ -255,7 +255,7 @@
                             <h2 class="content-title">Outfit Builder</h2>
                             <p class="content-description">Create your perfect outfit with our easy-to-use Outfit Builder.</p>
                         </div>
-                        <a class="button" href="#" rel="ugc">Try Outfit Builder</a>
+                        <a class="button" id="outfitbuild-button" rel="ugc">Try Outfit Builder</a>
                     </div>
                     <div>
                         <img src="/3.jpeg" alt="Outfit Builder" class="content-img" />
@@ -274,6 +274,8 @@
                 document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
                 document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
                 document.getElementById('explore-button').setAttribute('href', `/recommendations.html?name=${name}`);
+                document.getElementById('outfit-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
+                document.getElementById('outfitbuild-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
             }
         });
     </script>

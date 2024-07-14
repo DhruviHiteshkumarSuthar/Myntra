@@ -178,7 +178,7 @@
         <nav class="nav">
             <a class="nav-link " id="home-button" rel="ugc">Home</a>
             <a class="nav-link" id="recommend-button" rel="ugc">Recommendation Page</a>
-            <a class="nav-link active" href="/outfitbuilder.html" rel="ugc">Outfit Builder</a>
+            <a class="nav-link active" id="outfit-button" rel="ugc">Outfit Builder</a>
         </nav>
         <span class="user-menu">
             <img class="aspect-square" src="/4.png" />
@@ -210,31 +210,41 @@
         </div>
     </div>
 </div>
+
     <script>
-        function filterSelection(category, button) {
-            const items = document.querySelectorAll('.item');
-            const buttons = document.querySelectorAll('.filter-button');
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
 
-            // Remove 'active' class from all buttons
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-            });
+            if (name) {
+                document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
+                document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
+                document.getElementById('outfit-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
+            }
 
-            // Add 'active' class to the clicked button
-            button.classList.add('active');
+            function filterSelection(category, button) {
+                const items = document.querySelectorAll('.item');
+                const buttons = document.querySelectorAll('.filter-button');
 
-            items.forEach(item => {
-                if (category === 'all') {
-                    item.style.display = 'block';
-                } else if (item.classList.contains(category)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
+                // Remove 'active' class from all buttons
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                });
 
-        
+                // Add 'active' class to the clicked button
+                button.classList.add('active');
+
+                items.forEach(item => {
+                    if (category === 'all') {
+                        item.style.display = 'block';
+                    } else if (item.classList.contains(category)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
