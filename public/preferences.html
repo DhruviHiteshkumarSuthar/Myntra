@@ -7,34 +7,82 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 <style>
-  .container {
-    margin-top: 50px;
+  /* .container {
+    margin-top: 30px;
   }
+   */
+  .intro-section {
+    min-height: 100px;
+    width: 100%;
+    padding: 3rem 0;
+    background-color: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* flex-direction: column; */
+}
+
+.intro-text {
+    margin: 0 auto;
+    max-width: 37.5rem;
+    text-align: center;
+}
+
+.intro-title {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1.25;
+}
+
+.intro-subtitle {
+    color: #4b5563;
+    font-size: 1.25rem;
+    line-height: 1.75;
+}
+
   .section-heading {
+    margin-top: 20px;
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
   }
   .item-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    
   }
   .item {
     width: 150px;
+    height: 170px; /* Ensure uniform height and width */
     text-align: center;
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ffffff; /* Add border for better visual separation */
+    border-radius: 8px;
+    overflow: hidden; /* Ensure content stays within the bounds */
+    transition: ease-in-out 0.2s; /* Smooth hover effect */
+    
+  }
+  .item:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
   }
   .item img {
     width: 100%;
-    border-radius: 8px;
+    height: auto;
+    max-height: 140px; /* Constrain image height */
+    border-radius: 55%;
     cursor: pointer;
   }
   .item.selected img {
-    border: 3px solid rgb(242,85,17);
+    border: 3px solid#1f2937;
+   
   }
   .submit-btn {
-    background-color: rgb(242,85,17);
-    color: #fff;
+    background-color: #1f2937;
+    color: white;
     font-size: 15px;
     padding: 10px 45px;
     border: none;
@@ -45,19 +93,23 @@
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     margin-top: 20px;
+    margin-bottom: 20px;
   }
   .submit-btn:hover {
-    background-color: #fff;
-    color: rgb(242,85,17);
-    border: 3px solid rgb(242,85,17);
+    outline: 2px solid#1f2937;
+    background-color: white;
+    color:#1f2937;
+    
   }
 </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1 id="greeting"></h1>
-    </div>
+    <section class="intro-section">
+      <div class="intro-text">
+          <h2 class="intro-title" id="greeting"></h2>
+      </div>
+  </section>
     <div class="section">
       <div class="section-heading">Select Your Favorite Brands</div>
       <div class="item-container" id="brands">
@@ -101,15 +153,25 @@
         { name: 'SASSAFRAS', image: 'SASSAFRAS.png' },
         { name: 'Sera', image: 'Sera.png' },
         { name: 'Tokyo Talkies', image: 'Tokyo_Talkies.png' },
-        { name: 'Athena', image: 'Athena.png' },
         { name: 'Berrylush', image: 'Berrylush.png' },
         { name: 'STREET 9', image: 'STREET_9.png' },
         { name: 'StyleCast', image: 'StyleCast.png' },
-        { name: 'Bewakoof', image: 'Bewakoof.png' },
-        { name: 'CURVY STREET', image: 'CURVY_STREET.png' },
         { name: 'Roadster', image: 'Roadster.png' },
-        { name: 'DressBerry', image: 'DressBerry.png' }
-        // Add more brands here
+        { name: 'DressBerry', image: 'DressBerry.png' },
+        { name: 'H&M', image: 'H_&_M.png' },
+        { name: 'CURVY STREET', image: 'CURVY_STREET.png' },
+        { name: 'Forever21', image: 'Forever21.png' },
+        { name: 'Libas', image: 'Libas.png' },
+        { name: 'BAESD', image: 'BAESD.png' },
+        { name: 'Athena', image: 'Athena.png' },
+        { name: 'KASSUALLY', image: 'KASSUALLY.png' },
+        { name: 'HRX', image: 'HRX.png' },
+        { name: 'Bewakoof', image: 'Bewakoof.png' },
+        { name: 'Puma', image: 'Puma.png' },
+        {name:"DENNISON", image:"DENNISON.png"},
+        {name:" boohooMAN", image:" boohooMAN.png"},
+        { name:"HIGHLANDER", image: 'HIGHLANDER.png' },
+       
       ];
       const categories = [
         { name: 'Ethnic', image: 'ethnic.png' },

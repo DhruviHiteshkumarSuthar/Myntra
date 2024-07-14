@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outfit Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .min-h-dvh {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: white;
+            padding: 0 1rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            display: flex;
+            overflow: hidden;
+            border-radius: 50%;
+            height: 2.25rem;
+            width: 2.25rem;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            margin: 0 auto;
+        }
+
+        .nav-link {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: #292b96;
+            text-decoration: underline;
+            text-underline-offset: 0.75rem;
+        }
+
+        .active {
+            color: dodgerblue;
+        }
+
+        .user-menu {
+            display: flex;
+            overflow: hidden;
+            border-radius: 50%;
+            height: 2.25rem;
+            width: 2.25rem;
+        }
+
+        .user-menu img {
+            width: 100%;
+            height: 90%;
+            object-fit: cover;
+        }
+
+        .container {
+            width: 90%;
+            margin: 20px auto; 
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .title {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #f3f4f6;
+            color: #111827;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .filter-button.active {
+            background-color: #4b5563;
+            color: white;
+        }
+
+        .outfits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .outfit-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-frame {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background-color: rgb(242, 241, 255);
+            padding: 20px;
+            border-radius: 10px;
+            height: 450px;
+            width: 550px;
+        }
+
+        .photo-frame img {
+            width: 270px;
+            height: 430px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flex-col min-h-dvh">
+    <header class="header">
+        <a class="logo" href="#" rel="ugc">
+            <span class="logo-img">
+                <img class="aspect-square" src="/1.png" />
+                <span class="sr-only">Toggle user menu</span>
+            </span>
+            <span class="logo-text">Myntra</span>
+        </a>
+        <nav class="nav">
+            <a class="nav-link " id="home-button" rel="ugc">Home</a>
+            <a class="nav-link" id="recommend-button" rel="ugc">Recommendation Page</a>
+            <a class="nav-link active" href="/outfitbuilder.html" rel="ugc">Outfit Builder</a>
+        </nav>
+        <span class="user-menu">
+            <img class="aspect-square" src="/4.png" />
+            <span class="sr-only">Toggle user menu</span>
+        </span>
+    </header>
+
+    <div class="container">
+        <h1 class="title">Outfit Builder</h1>
+        <div class="filter-buttons">
+            <div class="filter-buttons">
+                <button class="filter-button active" onclick="filterSelection('women', this)">Women</button>
+                <button class="filter-button" onclick="filterSelection('men', this)">Men</button>
+            </div>
+        </div>
+        <div class="outfits-grid">
+            <div class="outfit-item">
+                <div class="photo-frame">
+                    <img src="https://via.placeholder.com/150" alt="Outfit 1">
+                    <img src="https://via.placeholder.com/150" alt="Outfit 2">
+                </div>
+            </div>
+            <div class="outfit-item">
+                <div class="photo-frame">
+                    <img src="https://via.placeholder.com/150" alt="Outfit 3">
+                    <img src="https://via.placeholder.com/150" alt="Outfit 4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+        function filterSelection(category, button) {
+            const items = document.querySelectorAll('.item');
+            const buttons = document.querySelectorAll('.filter-button');
+
+            // Remove 'active' class from all buttons
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add 'active' class to the clicked button
+            button.classList.add('active');
+
+            items.forEach(item => {
+                if (category === 'all') {
+                    item.style.display = 'block';
+                } else if (item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        
+    </script>
+</body>
+</html>
