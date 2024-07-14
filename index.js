@@ -166,38 +166,33 @@ app.post('/save-preferences', (req, res) => {
 app.get('/recommendations', (req, res) => {
   const { name, gender } = req.query;
 
-  // Fetch user preferences and purchase history
-  userPrefDB.find({ selector: { user: name } }, (err, userPrefs) => { 
+  // Fetch user preferences
+  userPrefDB.find({ selector: { user: name } }, (err, userPrefs) => {
     if (err) {
       console.error('Error fetching user preferences:', err);
       return res.status(500).send('Error fetching user preferences');
     }
 
-    purchasesDB.find({ selector: { User: name } }, (err, purchases) => { //1
+    // Fetch purchase history
+    purchasesDB.find({ selector: { user: name } }, (err, purchases) => {
       if (err) {
         console.error('Error fetching purchase history:', err);
         return res.status(500).send('Error fetching purchase history');
       }
 
-      const userPreferences = userPrefs.docs.reduce((acc, pref) => {
-        acc[pref.type] = acc[pref.type] || [];
-        acc[pref.type].push(pref.preference);
-        return acc;
-      }, {});
-
-      const ranksDoc = userPrefs.docs.find(pref => pref.type === 'ranks');
-      const ranks = ranksDoc ? ranksDoc.ranks : {};
-      const rankPoints = { 1: 40, 2: 30, 3: 20, 4: 10 };
+      console.log('Fetched purchases:', purchases.docs);
 
       const purchaseHistory = purchases.docs.reduce((acc, purchase) => {
-        const product = purchase.product;
-        acc.brands[product.Brand] = (acc.brands[product.Brand] || 0) + 1;
-        acc.patterns[product.Print_or_Pattern_Type] = (acc.patterns[product.Print_or_Pattern_Type] || 0) + 1;
-        acc.categories[product.Category] = (acc.categories[product.Category] || 0) + 1;
-        acc.prices.push(product.Original_Price);
+        acc.brands[purchase.Brand] = (acc.brands[purchase.Brand] || 0) + 1;
+        acc.patterns[purchase.Print_or_Pattern_Type] = (acc.patterns[purchase.Print_or_Pattern_Type] || 0) + 1;
+        acc.categories[purchase.Category] = (acc.categories[purchase.Category] || 0) + 1;
+        acc.prices.push(purchase.Original_Price);
         return acc;
       }, { brands: {}, patterns: {}, categories: {}, prices: [] });
 
+      console.log('Processed purchase history:', purchaseHistory);
+
+      // Extract additional preferences from purchase history
       const topBrands = Object.entries(purchaseHistory.brands).sort((a, b) => b[1] - a[1]).slice(0, 2).map(item => item[0]);
       const topPatterns = Object.entries(purchaseHistory.patterns).sort((a, b) => b[1] - a[1]).slice(0, 2).map(item => item[0]);
       const topCategories = Object.entries(purchaseHistory.categories).sort((a, b) => b[1] - a[1]).slice(0, 2).map(item => item[0]);
@@ -210,12 +205,16 @@ app.get('/recommendations', (req, res) => {
         { _id: `${name}-price`, user: name, preference: maxPrice, type: 'price' }
       ];
 
+      // Save additional preferences to userPrefDB
       userPrefDB.bulk({ docs: additionalPreferences }, (err, result) => {
         if (err) {
           console.error('Error saving additional preferences:', err);
           return res.status(500).send('Error saving additional preferences');
         }
 
+        console.log('Additional preferences saved:', result);
+
+        // Fetch products and calculate recommendations
         productsDB.list({ include_docs: true }, (err, products) => {
           if (err) {
             console.error('Error fetching products:', err);
@@ -223,28 +222,30 @@ app.get('/recommendations', (req, res) => {
           }
 
           const recommendations = products.rows
-            .filter(row => row.doc.Gender === gender) // Filter by gender
+            .filter(row => row.doc.Gender.toLowerCase() === gender.toLowerCase())
             .map(row => {
               const product = row.doc;
               let score = 0;
 
               // Scoring logic
-              if (userPreferences.brand && userPreferences.brand.includes(product.Brand)) {
+              if (userPrefs.docs.find(pref => pref.type === 'brand' && pref.preference === product.Brand)) {
                 score += rankPoints[ranks.brand] || 0;
               }
-              if (userPreferences.category && userPreferences.category.includes(product.Category)) {
+              if (userPrefs.docs.find(pref => pref.type === 'category' && pref.preference === product.Category)) {
                 score += rankPoints[ranks.category] || 0;
               }
-              if (userPreferences.pattern && userPreferences.pattern.includes(product.Print_or_Pattern_Type)) {
+              if (userPrefs.docs.find(pref => pref.type === 'pattern' && pref.preference === product.Print_or_Pattern_Type)) {
                 score += rankPoints[ranks.pattern] || 0;
               }
-              if (product.Original_Price <= userPreferences.price) {
+              if (typeof userPrefs.docs.find(pref => pref.type === 'price')?.preference === 'number' && product.Original_Price <= userPrefs.docs.find(pref => pref.type === 'price')?.preference) {
                 score += rankPoints[ranks.price] || 0;
               }
 
               return { product, score };
             })
-            .filter(item => item.score > 50) // Filter out products with a score of 70 or less
+            .filter(item => item.score > 50); // Filter out products with a score of 50 or less
+
+          console.log('Recommendations:', recommendations);
 
           res.status(200).json(recommendations);
         });
@@ -252,6 +253,8 @@ app.get('/recommendations', (req, res) => {
     });
   });
 });
+
+
 
 const colorCombinations = {
   'Blue': ['Orange', 'White', 'Grey', 'Beige'],
@@ -281,44 +284,44 @@ app.get('/outfit-recommendations', (req, res) => {
   const { occasion, gender } = req.query;
 
   productsDB.list({ include_docs: true }, (err, products) => {
-      if (err) {
-          console.error('Error fetching products:', err);
-          return res.status(500).send('Error fetching products');
-      }
+    if (err) {
+      console.error('Error fetching products:', err);
+      return res.status(500).send('Error fetching products');
+    }
 
-      const topWearCategories = ['T-Shirts', 'Shirts', 'Tops', 'Blazer', 'Jackets'];
-      const bottomWearCategories = ['Trousers', 'Jeans', 'Track-Pants', 'Shorts'];
+    const topWearCategories = ['T-Shirts', 'Shirts', 'Tops', 'Blazers', 'Jackets'];
+    const bottomWearCategories = ['Trousers', 'Jeans', 'Track-Pants', 'Shorts'];
 
-      // Filter tops and bottoms by occasion and gender
-      const tops = products.rows.filter(row =>
-          topWearCategories.includes(row.doc.Individual_Category) &&
-          row.doc.Occasion === occasion &&
-          row.doc.Gender.toLowerCase() === gender.toLowerCase()
-      ).map(row => row.doc);
+    // Filter tops and bottoms by occasion and gender
+    const tops = products.rows.filter(row =>
+      topWearCategories.includes(row.doc.Individual_Category) &&
+      row.doc.Occasion === occasion &&
+      row.doc.Gender.toLowerCase() === gender.toLowerCase()
+    ).map(row => row.doc);
 
-      const bottoms = products.rows.filter(row =>
-          bottomWearCategories.includes(row.doc.Individual_Category) &&
-          row.doc.Occasion === occasion &&
-          row.doc.Gender.toLowerCase() === gender.toLowerCase()
-      ).map(row => row.doc);
+    const bottoms = products.rows.filter(row =>
+      bottomWearCategories.includes(row.doc.Individual_Category) &&
+      row.doc.Occasion === occasion &&
+      row.doc.Gender.toLowerCase() === gender.toLowerCase()
+    ).map(row => row.doc);
 
-      // Generate outfit combinations
-      const outfitRecommendations = [];
+    // Generate outfit combinations
+    const outfitRecommendations = [];
 
-      tops.forEach(top => {
-          bottoms.forEach(bottom => {
-              if (colorCombinations[top.Color]?.includes(bottom.Color)) {
-                  outfitRecommendations.push({
-                      top: { Product_id: top.Product_id, Product: top.Product, Color: top.Color },
-                      bottom: { Product_id: bottom.Product_id, Product: bottom.Product, Color: bottom.Color },
-                  });
-              }
+    tops.forEach(top => {
+      bottoms.forEach(bottom => {
+        if (colorCombinations[top.Color]?.includes(bottom.Color)) {
+          outfitRecommendations.push({
+            top: { Product_id: top.Product_id, Product: top.Product, Color: top.Color },
+            bottom: { Product_id: bottom.Product_id, Product: bottom.Product, Color: bottom.Color },
           });
+        }
       });
+    });
 
-      // Shuffle and limit recommendations
-      const shuffledRecommendations = outfitRecommendations.sort(() => 0.5 - Math.random()).slice(0, 6);
-      res.status(200).json(shuffledRecommendations);
+    // Shuffle and limit recommendations
+    const shuffledRecommendations = outfitRecommendations.sort(() => 0.5 - Math.random()).slice(0, 6);
+    res.status(200).json(shuffledRecommendations);
   });
 });
 

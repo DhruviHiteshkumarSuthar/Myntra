@@ -242,10 +242,10 @@
             <div class="dropdown">
                 <button class="filter-button" id="occasion-button">Occasions <span class="arrow-down"></span></button>
                 <div class="dropdown-content">
-                    <a href="#" onclick="selectOccasion('Casual')">Casual</a>
-                    <a href="#" onclick="selectOccasion('Daily')">Daily</a>
-                    <a href="#" onclick="selectOccasion('Formal')">Formal</a>
-                    <a href="#" onclick="selectOccasion('Sports')">Sports</a>
+                    <a href="#" onclick="selectOccasion('Casual', event)">Casual</a>
+                    <a href="#" onclick="selectOccasion('Daily', event)">Daily</a>
+                    <a href="#" onclick="selectOccasion('Formal', event)">Formal</a>
+                    <a href="#" onclick="selectOccasion('Sports', event)">Sports</a>
                 </div>
             </div>
         </div>
@@ -275,13 +275,16 @@
             getOutfitRecommendations();
         }
 
-        window.selectOccasion = function(occasion) {
+        window.selectOccasion = function(occasion, event) {
+            event.preventDefault(); // Prevent the default anchor behavior
+
             const occasionButton = document.getElementById('occasion-button');
             occasionButton.innerHTML = occasion + ' <span class="arrow-down"></span>';
 
             // Automatically fetch recommendations when an occasion is selected
             getOutfitRecommendations();
         }
+
 
         window.getOutfitRecommendations = function() {
     const gender = document.querySelector('.filter-button.active').innerText.toLowerCase();
