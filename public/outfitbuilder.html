@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outfit Builder</title>
     <style>
+        /* CSS styles remain unchanged */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -124,6 +125,9 @@
             color: #111827;
             cursor: pointer;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .filter-button.active {
@@ -162,11 +166,55 @@
             object-fit: cover;
             border-radius: 10px;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-radius: 10px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .filter-button {
+            background-color: #4b5563;
+            color: white;
+        }
+
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #111827;
+        }
     </style>
 </head>
 <body>
 
-    <div class="flex-col min-h-dvh">
+<div class="flex-col min-h-dvh">
     <header class="header">
         <a class="logo" href="#" rel="ugc">
             <span class="logo-img">
@@ -176,7 +224,7 @@
             <span class="logo-text">Myntra</span>
         </a>
         <nav class="nav">
-            <a class="nav-link " id="home-button" rel="ugc">Home</a>
+            <a class="nav-link" id="home-button" rel="ugc">Home</a>
             <a class="nav-link" id="recommend-button" rel="ugc">Recommendation Page</a>
             <a class="nav-link active" id="outfit-button" rel="ugc">Outfit Builder</a>
         </nav>
@@ -189,62 +237,81 @@
     <div class="container">
         <h1 class="title">Outfit Builder</h1>
         <div class="filter-buttons">
-            <div class="filter-buttons">
-                <button class="filter-button active" onclick="filterSelection('women', this)">Women</button>
-                <button class="filter-button" onclick="filterSelection('men', this)">Men</button>
+            <button class="filter-button active" onclick="filterSelection('women', this)">Women</button>
+            <button class="filter-button" onclick="filterSelection('men', this)">Men</button>
+            <div class="dropdown">
+                <button class="filter-button" id="occasion-button">Occasions <span class="arrow-down"></span></button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="selectOccasion('Casual')">Casual</a>
+                    <a href="#" onclick="selectOccasion('Daily')">Daily</a>
+                    <a href="#" onclick="selectOccasion('Formal')">Formal</a>
+                    <a href="#" onclick="selectOccasion('Sports')">Sports</a>
+                </div>
             </div>
         </div>
-        <div class="outfits-grid">
-            <div class="outfit-item">
-                <div class="photo-frame">
-                    <img src="https://via.placeholder.com/150" alt="Outfit 1">
-                    <img src="https://via.placeholder.com/150" alt="Outfit 2">
-                </div>
-            </div>
-            <div class="outfit-item">
-                <div class="photo-frame">
-                    <img src="https://via.placeholder.com/150" alt="Outfit 3">
-                    <img src="https://via.placeholder.com/150" alt="Outfit 4">
-                </div>
-            </div>
+        <div class="outfits-grid" id="outfits-grid">
+            <!-- Outfit items will be inserted here -->
         </div>
     </div>
 </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get('name');
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
 
-            if (name) {
-                document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
-                document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
-                document.getElementById('outfit-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
-            }
+        if (name) {
+            document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
+            document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
+            document.getElementById('outfit-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
+        }
 
-            function filterSelection(category, button) {
-                const items = document.querySelectorAll('.item');
-                const buttons = document.querySelectorAll('.filter-button');
+        window.filterSelection = function(gender, button) {
+            const buttons = document.querySelectorAll('.filter-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
 
-                // Remove 'active' class from all buttons
-                buttons.forEach(btn => {
-                    btn.classList.remove('active');
-                });
+            // Automatically fetch recommendations when gender is selected
+            getOutfitRecommendations();
+        }
 
-                // Add 'active' class to the clicked button
-                button.classList.add('active');
+        window.selectOccasion = function(occasion) {
+            const occasionButton = document.getElementById('occasion-button');
+            occasionButton.innerHTML = occasion + ' <span class="arrow-down"></span>';
 
-                items.forEach(item => {
-                    if (category === 'all') {
-                        item.style.display = 'block';
-                    } else if (item.classList.contains(category)) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            }
-        });
-    </script>
+            // Automatically fetch recommendations when an occasion is selected
+            getOutfitRecommendations();
+        }
+
+        window.getOutfitRecommendations = function() {
+    const gender = document.querySelector('.filter-button.active').innerText.toLowerCase();
+    const occasion = document.getElementById('occasion-button').innerText.split(' ')[0];
+
+    fetch(`/outfit-recommendations?occasion=${occasion}&gender=${gender}`)
+        .then(response => response.json())
+        .then(data => {
+            const outfitsGrid = document.getElementById('outfits-grid');
+            outfitsGrid.innerHTML = '';
+
+            const shuffledData = data.sort(() => Math.random() - 0.5);
+
+            shuffledData.slice(0, 6).forEach(outfit => {
+                const outfitDiv = document.createElement('div');
+                outfitDiv.className = 'outfit-item';
+                outfitDiv.innerHTML = `
+                    <div class="photo-frame">
+                        <img src="/photo/${outfit.top.Product_id}.png" alt="${outfit.top.Product}">
+                        <img src="/photo/${outfit.bottom.Product_id}.png" alt="${outfit.bottom.Product}">
+                    </div>
+                `;
+                outfitsGrid.appendChild(outfitDiv);
+            });
+        })
+        .catch(error => console.error('Error fetching outfit recommendations:', error));
+}
+
+
+    });
+</script>
 </body>
 </html>

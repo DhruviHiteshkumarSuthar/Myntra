@@ -253,6 +253,75 @@ app.get('/recommendations', (req, res) => {
   });
 });
 
+const colorCombinations = {
+  'Blue': ['Orange', 'White', 'Grey', 'Beige'],
+  'Red': ['White', 'Black'],
+  'Yellow': ['Purple', 'Brown', 'Black'],
+  'Green': ['Yellow', 'Brown', 'Beige'],
+  'Orange': ['Blue', 'White', 'Black'],
+  'Purple': ['Yellow', 'White', 'Grey'],
+  'Pink': ['Grey', 'White', 'Black'],
+  'Black': ['White', 'Grey', 'Red'],
+  'White': ['Black', 'Blue', 'Red'],
+  'Grey': ['Pink', 'Blue', 'White'],
+  'Brown': ['Yellow', 'Green', 'Beige'],
+  'Beige': ['Brown', 'Blue', 'White'],
+  'Magenta': ['White', 'Black', 'Grey'],
+  'Burgundy': ['Grey', 'White', 'Black'],
+  'Lavender': ['Beige', 'White', 'Grey'],
+  'Peach': ['Cream', 'White', 'Grey'],
+  'Cream': ['Peach', 'Brown', 'White'],
+  'Khakhi': ['Blue', 'White', 'Black'],
+  'Multicoloured': ['Blue', 'White', 'Black'],
+  'Maroon': ['White', 'Black', 'Beige', 'Grey', 'Peach'],
+  'Violet': ['White', 'Grey', 'Cream', 'Beige']
+};
+
+app.get('/outfit-recommendations', (req, res) => {
+  const { occasion, gender } = req.query;
+
+  productsDB.list({ include_docs: true }, (err, products) => {
+      if (err) {
+          console.error('Error fetching products:', err);
+          return res.status(500).send('Error fetching products');
+      }
+
+      const topWearCategories = ['T-Shirts', 'Shirts', 'Tops', 'Blazer', 'Jackets'];
+      const bottomWearCategories = ['Trousers', 'Jeans', 'Track-Pants', 'Shorts'];
+
+      // Filter tops and bottoms by occasion and gender
+      const tops = products.rows.filter(row =>
+          topWearCategories.includes(row.doc.Individual_Category) &&
+          row.doc.Occasion === occasion &&
+          row.doc.Gender.toLowerCase() === gender.toLowerCase()
+      ).map(row => row.doc);
+
+      const bottoms = products.rows.filter(row =>
+          bottomWearCategories.includes(row.doc.Individual_Category) &&
+          row.doc.Occasion === occasion &&
+          row.doc.Gender.toLowerCase() === gender.toLowerCase()
+      ).map(row => row.doc);
+
+      // Generate outfit combinations
+      const outfitRecommendations = [];
+
+      tops.forEach(top => {
+          bottoms.forEach(bottom => {
+              if (colorCombinations[top.Color]?.includes(bottom.Color)) {
+                  outfitRecommendations.push({
+                      top: { Product_id: top.Product_id, Product: top.Product, Color: top.Color },
+                      bottom: { Product_id: bottom.Product_id, Product: bottom.Product, Color: bottom.Color },
+                  });
+              }
+          });
+      });
+
+      // Shuffle and limit recommendations
+      const shuffledRecommendations = outfitRecommendations.sort(() => 0.5 - Math.random()).slice(0, 6);
+      res.status(200).json(shuffledRecommendations);
+  });
+});
+
 
 
 app.listen(PORT, () => {
