@@ -13,7 +13,7 @@ const usersDB = cloudant.use('myntra_users');
 const userPrefDB = cloudant.use('user_preferences');
 const productsDB = cloudant.use('products');
 const purchasesDB = cloudant.use('purchase_history'); 
-
+const likeProducts=cloudant.use('likedproducts')
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 
@@ -190,7 +190,8 @@ app.get('/recommendations', (req, res) => {
 
 
         const filteredRecommendations = recommendations.filter(item => item.score >= 60); // Filter out products with a score less than or equal to 60
-
+        
+        filteredRecommendations.addEventListener
 
         res.status(200).json(filteredRecommendations);
       });
@@ -303,6 +304,7 @@ app.get('/purchasehistory', (req, res) => {
     res.status(200).json(processedPurchaseHistory); // Send the processed data
   });
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

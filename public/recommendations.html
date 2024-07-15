@@ -255,11 +255,12 @@
                 document.getElementById('outfit-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
                 document.getElementById('purchase-button').setAttribute('href', `/purchasehistory.html?name=${name}`);
             }
-    
+            const filteredRecommendations={};
           const fetchRecommendations = (gender) => {
             fetch(`/recommendations?name=${name}&gender=${gender}`)
               .then(response => response.json())
               .then(data => {
+                // filteredRecommendations=data;
                 const recommendationsContainer = document.getElementById('recommendations');
                 recommendationsContainer.innerHTML = ''; // Clear previous recommendations
                 data.forEach(item => {
@@ -279,7 +280,7 @@
                     <p class="product-rates text">Creadibility Score: ${item.score}%</p>
                     <div class="action-buttons">
                         <button class="like-btn"><i class="fas fa-heart"></i></button>
-                        <button class="dislike-btn"><i class="fas fa-heart-broken"></i></button>
+                        <button class="dislike-btn"  )><i class="fas fa-heart-broken"></i></button>
                     </div>
                 </div>
                   `;
@@ -290,8 +291,18 @@
                 console.error('Error fetching recommendations:', error);
               });
           };
-    
-          // Initial fetch with default gender
+          document.getElementById('recommendations').addEventListener('click', function(event) {
+  // Handle dislike button click
+  if (event.target && event.target.closest('.dislike-btn')) {
+    const productElement = event.target.closest('.product');
+    if (productElement) {
+      productElement.remove();
+    }
+  }
+
+  // 
+ });
+            // Initial fetch with default gender
           fetchRecommendations('Men');
     
           // Add event listeners for radio buttons
