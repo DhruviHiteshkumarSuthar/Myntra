@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,10 +7,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 <style>
-  /* .container {
-    margin-top: 30px;
-  }
-   */
   .intro-section {
     min-height: 100px;
     width: 100%;
@@ -19,7 +15,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* flex-direction: column; */
 }
 
 .intro-text {
@@ -53,26 +48,26 @@
   }
   .item {
     width: 150px;
-    height: 170px; /* Ensure uniform height and width */
+    height: 170px; 
     text-align: center;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid #ffffff; /* Add border for better visual separation */
+    border: 1px solid #ffffff; 
     border-radius: 8px;
-    overflow: hidden; /* Ensure content stays within the bounds */
-    transition: ease-in-out 0.2s; /* Smooth hover effect */
+    overflow: hidden; 
+    transition: ease-in-out 0.2s; 
     
   }
   .item:hover {
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    transform: scale(1.05); 
   }
   .item img {
     width: 100%;
     height: auto;
-    max-height: 140px; /* Constrain image height */
+    max-height: 140px; 
     border-radius: 55%;
     cursor: pointer;
   }
@@ -113,19 +108,16 @@
     <div class="section">
       <div class="section-heading">Select Your Favorite Brands</div>
       <div class="item-container" id="brands">
-        <!-- Brands items will be dynamically added here -->
       </div>
     </div>
     <div class="section">
       <div class="section-heading">Select Your Favorite Categories</div>
       <div class="item-container" id="categories">
-        <!-- Categories items will be dynamically added here -->
       </div>
     </div>
     <div class="section">
       <div class="section-heading">Select Your Favorite Patterns</div>
       <div class="item-container" id="patterns">
-        <!-- Patterns items will be dynamically added here -->
       </div>
     </div>
     <div class="section">
@@ -258,6 +250,268 @@
         })
         .catch(error => {
           console.error('Error:', error);
+        });
+      });
+    });
+  </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preferences</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<style>
+  .intro-section {
+    min-height: 100px;
+    width: 100%;
+    padding: 3rem 0;
+    background-color: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .intro-text {
+    margin: 0 auto;
+    max-width: 37.5rem;
+    text-align: center;
+  }
+
+  .intro-title {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1.25;
+  }
+
+  .section-heading {
+    margin-top: 20px;
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .item-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .item {
+    width: 120px; /* Adjusted width */
+    height: 50px; /* Adjusted height */
+    text-align: center;
+    margin: 10px; /* Uniform margin */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ffffff; /* Add border for better visual separation */
+    border-radius: 8px;
+    transition: ease-in-out 0.2s; /* Smooth hover effect */
+    font-size: 0.875rem; /* Smaller font size */
+  }
+
+  .item:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    border: 1px solid #1f2937;
+  }
+
+  .item.selected {
+    border: 3px solid #1f2937;
+  }
+
+  .submit-btn {
+    background-color: #1f2937;
+    color: white;
+    font-size: 15px;
+    padding: 10px 45px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .submit-btn:hover {
+    outline: 2px solid #1f2937;
+    background-color: white;
+    color: #1f2937;
+  }
+
+  .rank-container {
+    display: flex;
+    align-items: center; /* Align items horizontally */
+    justify-content: center; /* Center align horizontally */
+    margin-top: 20px;
+  }
+
+  .rank-container label {
+    margin: 0 10px; /* Adjust margin between label and input */
+  }
+
+  .rank-container input[type="number"] {
+    width: 40px; /* Adjust input width as needed */
+    margin: 0 5px; /* Adjust margin between inputs */
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <section class="intro-section">
+      <div class="intro-text">
+          <h2 class="intro-title" id="greeting"></h2>
+      </div>
+    </section>
+    <div class="section">
+      <div class="section-heading">Select Your Favorite Brands</div>
+      <div class="item-container" id="brands">
+        <!-- Brands items will be dynamically added here -->
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-heading">Select Your Favorite Categories</div>
+      <div class="item-container" id="categories">
+        <!-- Categories items will be dynamically added here -->
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-heading">Select Your Favorite Patterns</div>
+      <div class="item-container" id="patterns">
+        <!-- Patterns items will be dynamically added here -->
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-heading">Rank the Parameters</div>
+      <div class="rank-container">
+        <label for="brand-rank">Brand:</label>
+        <input type="number" id="brand-rank" name="brand-rank" min="1" max="4">
+        <label for="price-rank">Price:</label>
+        <input type="number" id="price-rank" name="price-rank" min="1" max="4">
+        <label for="pattern-rank">Print & Pattern:</label>
+        <input type="number" id="pattern-rank" name="pattern-rank" min="1" max="4">
+        <label for="category-rank">Category:</label>
+        <input type="number" id="category-rank" name="category-rank" min="1" max="4">
+      </div>
+    </div>
+    <button class="submit-btn" id="submit-btn">Submit</button>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name');
+      document.getElementById('greeting').textContent = `Hello! ${name}`;
+
+      const brands = [
+        { name: 'SASSAFRAS' },
+        { name: 'Sera' },
+        { name: 'Tokyo Talkies' },
+        { name: 'Berrylush' },
+        { name: 'STREET 9' },
+        { name: 'StyleCast' },
+        { name: 'Roadster' },
+        { name: 'DressBerry' },
+        { name: 'CURVY STREET' },
+        { name: 'Forever21' },
+        { name: 'BAESD' },
+        { name: 'Athena' },
+        { name: 'HRX' },
+        { name: 'Bewakoof' },
+        { name: 'Puma' },
+        { name: 'DENNISON' },
+        { name: 'boohooMAN' },
+        { name: 'HIGHLANDER' }
+      ];
+      const categories = [
+        { name: 'Ethnic' },
+        { name: 'Western' },
+        { name: 'Plus Size' },
+        { name: 'Formal' },
+        { name: 'Active Wear' }
+      ];
+      const patterns = [
+        { name: 'Solid' },
+        { name: 'Geometric' },
+        { name: 'Ethnic Motifs' },
+        { name: 'Floral' },
+        { name: 'Typography' },
+        { name: 'Checked' },
+        { name: 'Tie and Dye' },
+        { name: 'Faded' },
+        { name: 'Striped' }
+      ];
+
+      function createItemContainer(items, containerId) {
+        const container = document.getElementById(containerId);
+        items.forEach(item => {
+          const itemElement = document.createElement('div');
+          itemElement.classList.add('item');
+          itemElement.innerHTML = `<div>${item.name}</div>`;
+          itemElement.addEventListener('click', () => {
+            itemElement.classList.toggle('selected');
+          });
+          container.appendChild(itemElement);
+        });
+      }
+
+      createItemContainer(brands, 'brands');
+      createItemContainer(categories, 'categories');
+      createItemContainer(patterns, 'patterns');
+
+      document.getElementById('submit-btn').addEventListener('click', () => {
+        const selectedBrands = [...document.querySelectorAll('#brands .item.selected')].map(item => item.innerText.trim());
+        const selectedCategories = [...document.querySelectorAll('#categories .item.selected')].map(item => item.innerText.trim());
+        const selectedPatterns = [...document.querySelectorAll('#patterns .item.selected')].map(item => item.innerText.trim());
+
+        if (selectedBrands.length < 2 || selectedCategories.length < 2 || selectedPatterns.length < 2) {
+          alert('Please select at least 2 items from each category.');
+          return;
+        }
+
+        const brandRank = document.getElementById('brand-rank').value;
+        const priceRank = document.getElementById('price-rank').value;
+        const patternRank = document.getElementById('pattern-rank').value;
+        const categoryRank = document.getElementById('category-rank').value;
+
+        const preferences = {
+          name: name,
+          brands: selectedBrands,
+          categories: selectedCategories,
+          patterns: selectedPatterns,
+          ranks: {
+            brand: brandRank,
+            price: priceRank,
+            pattern: patternRank,
+            category: categoryRank
+          }
+        };
+
+        fetch('/save-preferences', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(preferences)
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = `/recommendations.html?name=${name}`;
+          } else {
+            throw new Error('Failed to save preferences.');
+          }
+        })
+        .catch(error => {
+          console.error('Error saving preferences:', error);
+          alert('Failed to save preferences. Please try again later.');
         });
       });
     });
