@@ -240,7 +240,6 @@
             </div>
             
             <div id="recommendations" class="product-cards-container">
-                <!-- Recommendations will be dynamically added here -->
             </div>
         </main>
     </div>
@@ -262,11 +261,10 @@
               .then(data => {
                 // filteredRecommendations=data;
                 const recommendationsContainer = document.getElementById('recommendations');
-                recommendationsContainer.innerHTML = ''; // Clear previous recommendations
+                recommendationsContainer.innerHTML = '';
                 data.forEach(item => {
                   const product = item.product;
                   const productElement = document.createElement('div');
-                //   productElement.classList.add('col-md-2', 'product');
                 productElement.classList.add('product');
                   productElement.innerHTML = `
                     <div class="product-card">
@@ -305,7 +303,6 @@
             // Initial fetch with default gender
           fetchRecommendations('Men');
     
-          // Add event listeners for radio buttons
           document.querySelectorAll('input[name="gender"]').forEach(radio => {
             radio.addEventListener('change', (event) => {
               fetchRecommendations(event.target.value);

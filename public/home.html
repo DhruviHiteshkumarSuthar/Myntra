@@ -231,7 +231,7 @@
         <main class="main-content">
             <section class="intro-section">
                 <div class="intro-text">
-                    <h2 class="intro-title">Welcome to Fashionista</h2>
+                    <h2 class="intro-title">Welcome to Myntra</h2>
                     <p class="intro-subtitle">Discover the latest fashion trends and get personalized recommendations for your style.</p>
                 </div>
             </section>
@@ -270,7 +270,6 @@
             const urlParams = new URLSearchParams(window.location.search);
             const name = urlParams.get('name');
 
-            // Set the button's href to include the name parameter
             if (name) {
                 document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
                 document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);

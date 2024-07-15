@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outfit Builder</title>
     <style>
-        /* CSS styles remain unchanged */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -251,7 +250,6 @@
             </div>
         </div>
         <div class="outfits-grid" id="outfits-grid">
-            <!-- Outfit items will be inserted here -->
         </div>
     </div>
 </div>
@@ -273,17 +271,15 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            // Automatically fetch recommendations when gender is selected
             getOutfitRecommendations();
         }
 
         window.selectOccasion = function(occasion, event) {
-            event.preventDefault(); // Prevent the default anchor behavior
+            event.preventDefault(); 
 
             const occasionButton = document.getElementById('occasion-button');
             occasionButton.innerHTML = occasion + ' <span class="arrow-down"></span>';
 
-            // Automatically fetch recommendations when an occasion is selected
             getOutfitRecommendations();
         }
 

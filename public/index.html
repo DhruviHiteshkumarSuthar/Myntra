@@ -28,10 +28,10 @@
     box-shadow: 0 7px 25px rgba(0, 0, 0, 0.45);
     position: relative;
     overflow: hidden;
-    width: 90%; /* Adjust width to cover majority portion */
+    width: 90%; 
     max-width: 800px; 
     min-height: 550px;
-    margin: 0 auto; /* Center the container horizontally */
+    margin: 0 auto; 
 }
 
 .container p {
@@ -174,8 +174,6 @@
 .toggle {
     height: 100%;
     background: linear-gradient(to right, rgb(244,28,128), rgb(242,85,17));
-    /* background: linear-gradient(to right, rgb(255,145,46), rgb(242,85,17)); */
-    /* background: linear-gradient(to right, rgb(224, 59, 136), rgb(242,85,17)); */
     color: #fff;
     position: relative;
     left: -100%;
@@ -262,9 +260,7 @@
         </div>
     </div>
 
-    <!-- Link Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Your Custom JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const container = document.querySelector(".container");
@@ -306,12 +302,9 @@
                     if (response.ok) {
                         alert('User created successfully');
                         window.location.href = `/preferences.html?name=${jsonData.name}`;
-                        // Redirect to sign-in page or perform other actions
                     } else if (response.status === 400) {
-                        // Email already exists
                         alert('Email already exists');
                     } else {
-                        // Other error (e.g., server error)
                         alert('Error creating user');
                     }
                 })
@@ -336,7 +329,6 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // alert('Sign in successful');
                         window.location.href = `/home.html?name=${jsonData.name}`;
                     } else if (response.status === 400) {
                         alert('Invalid email or password');
