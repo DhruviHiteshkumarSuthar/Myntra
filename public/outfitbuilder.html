@@ -229,8 +229,9 @@
             <a class="nav-link active" id="outfit-button" rel="ugc">Outfit Builder</a>
         </nav>
         <span class="user-menu">
-            <img class="aspect-square" src="/4.png" />
-            <span class="sr-only">Toggle user menu</span>
+            <a href="/purchasehistory.html" id="purchase-button">
+                <img class="aspect-square" src="/4.png" />
+            </a>
         </span>
     </header>
 
@@ -264,6 +265,7 @@
             document.getElementById('home-button').setAttribute('href', `/home.html?name=${name}`);
             document.getElementById('recommend-button').setAttribute('href', `/recommendations.html?name=${name}`);
             document.getElementById('outfit-button').setAttribute('href', `/outfitbuilder.html?name=${name}`);
+            document.getElementById('purchase-button').setAttribute('href', `/purchasehistory.html?name=${name}`);
         }
 
         window.filterSelection = function(gender, button) {
