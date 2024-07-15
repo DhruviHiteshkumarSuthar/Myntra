@@ -223,6 +223,51 @@ const colorCombinations = {
   'Violet': ['White', 'Grey', 'Cream', 'Beige']
 };
 
+// app.get('/outfit-recommendations', (req, res) => {
+//   const { occasion, gender } = req.query;
+
+//   productsDB.list({ include_docs: true }, (err, products) => {
+//     if (err) {
+//       console.error('Error fetching products:', err);
+//       return res.status(500).send('Error fetching products');
+//     }
+
+//     const topWearCategories = ['T-Shirts', 'Shirts', 'Tops', 'Blazers', 'Jackets'];
+//     const bottomWearCategories = ['Trousers', 'Jeans', 'Track-Pants', 'Shorts'];
+
+//     // Filter tops and bottoms by occasion and gender
+//     const tops = products.rows.filter(row =>
+//       topWearCategories.includes(row.doc.Individual_Category) &&
+//       row.doc.Occasion === occasion &&
+//       row.doc.Gender.toLowerCase() === gender.toLowerCase()
+//     ).map(row => row.doc);
+
+//     const bottoms = products.rows.filter(row =>
+//       bottomWearCategories.includes(row.doc.Individual_Category) &&
+//       row.doc.Occasion === occasion &&
+//       row.doc.Gender.toLowerCase() === gender.toLowerCase()
+//     ).map(row => row.doc);
+
+//     // Generate outfit combinations
+//     const outfitRecommendations = [];
+
+//     tops.forEach(top => {
+//       bottoms.forEach(bottom => {
+//         if (colorCombinations[top.Color]?.includes(bottom.Color)) {
+//           outfitRecommendations.push({
+//             top: { Product_id: top.Product_id, Product: top.Product, Color: top.Color },
+//             bottom: { Product_id: bottom.Product_id, Product: bottom.Product, Color: bottom.Color },
+//           });
+//         }
+//       });
+//     });
+
+//     // Shuffle and limit recommendations
+//     const shuffledRecommendations = outfitRecommendations.sort(() => 0.5 - Math.random()).slice(0, 6);
+//     res.status(200).json(shuffledRecommendations);
+//   });
+// });
+
 app.get('/outfit-recommendations', (req, res) => {
   const { occasion, gender } = req.query;
 
@@ -248,12 +293,23 @@ app.get('/outfit-recommendations', (req, res) => {
       row.doc.Gender.toLowerCase() === gender.toLowerCase()
     ).map(row => row.doc);
 
+    // Define allowed combinations
+    const allowedCombinations = {
+      'Jackets': ['Trousers', 'Jeans'],
+      'Shirts': ['Trousers', 'Jeans'],
+      'T-Shirts': ['Trousers', 'Jeans', 'Track-Pants', 'Shorts'],
+      'Blazers': ['Trousers', 'Jeans'],
+      'Tops': ['Trousers', 'Jeans'],
+    };
+
     // Generate outfit combinations
     const outfitRecommendations = [];
 
     tops.forEach(top => {
       bottoms.forEach(bottom => {
-        if (colorCombinations[top.Color]?.includes(bottom.Color)) {
+        const allowedBottoms = allowedCombinations[top.Individual_Category] || [];
+        // Only push to recommendations if it's a valid combination
+        if (allowedBottoms.includes(bottom.Individual_Category) && colorCombinations[top.Color]?.includes(bottom.Color)) {
           outfitRecommendations.push({
             top: { Product_id: top.Product_id, Product: top.Product, Color: top.Color },
             bottom: { Product_id: bottom.Product_id, Product: bottom.Product, Color: bottom.Color },
@@ -268,7 +324,30 @@ app.get('/outfit-recommendations', (req, res) => {
   });
 });
 
+app.get('/purchasehistory', (req, res) => {
+  const { name } = req.query; // Assuming user name is sent as a query parameter
 
+  // Fetch purchase history from purchasesDB for the given user
+  purchasesDB.find({ selector: { user: name } }, (err, purchases) => {
+    if (err) {
+      console.error('Error fetching purchase history:', err);
+      return res.status(500).send('Error fetching purchase history');
+    }
+
+    // Process and format purchase history data
+    const processedPurchaseHistory = purchases.docs.map(purchase => ({
+      productId: purchase.Product_id,
+      brand: purchase.Brand,
+      category: purchase.Category,
+      productName: purchase.Product,
+      originalPrice: purchase.Original_Price,
+      discount: purchase.Discount,
+      ratings: purchase.Ratings,
+    }));
+
+    res.status(200).json(processedPurchaseHistory); // Send the processed data
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
