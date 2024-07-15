@@ -179,7 +179,6 @@
         { name: 'Plus Size', image: 'Plus_Size.png' },
         { name: 'Formal', image: 'Formal.png' },
         { name: 'Active Wear', image: 'Active_Wear.png' }
-        // Add more categories here
       ];
       const patterns = [
         { name: 'Solid', image: 'Solid.png' },
@@ -192,12 +191,7 @@
         { name: 'Bandhani', image: 'Bandhani.png' },
         { name: 'Faded', image: 'Faded.png' },
         { name: 'Striped', image: 'striped.png' }
-        // Add more patterns here
       ];
-
-      // const brandContainer = document.getElementById('brands');
-      // const categoryContainer = document.getElementById('categories');
-      // const patternContainer = document.getElementById('patterns');
 
       function createItemContainer(items, containerId) {
         const container = document.getElementById(containerId);
@@ -256,7 +250,7 @@
         })
         .then(response => {
           if (response.ok) {
-            alert('Preferences saved successfully');
+            //alert('Preferences saved successfully');
             window.location.href = `/recommendations.html?name=${name}`;
           } else {
             alert('Error saving preferences');

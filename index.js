@@ -67,81 +67,6 @@ app.post('/signin', (req, res) => {
   });
 });
 
-// app.post('/save-preferences', (req, res) => {
-//   const { name, brands, categories, patterns, ranks } = req.body;
-
-//   const preferences = [
-//     ...brands.map(brand => ({ _id: `${name}-${brand}`, user: name, preference: brand, type: 'brand' })),
-//     ...categories.map(category => ({ _id: `${name}-${category}`, user: name, preference: category, type: 'category' })),
-//     ...patterns.map(pattern => ({ _id: `${name}-${pattern}`, user: name, preference: pattern, type: 'pattern' })),
-//     { _id: `${name}-ranks`, user: name, ranks: ranks, type: 'ranks' }
-//   ];
-
-//   userPrefDB.bulk({ docs: preferences }, (err, result) => {
-//     if (err) {
-//       console.error('Error saving preferences:', err);
-//       res.status(500).send('Error saving preferences');
-//     } else {
-//       console.log('Preferences and ranks saved successfully:', name);
-//       res.status(200).send('Preferences and ranks saved successfully');
-//     }
-//   });
-// });
-
-// app.get('/recommendations', (req, res) => {
-//   const { name, gender } = req.query;
-
-//   // Fetch user preferences
-//   userPrefDB.find({ selector: { user: name } }, (err, userPrefs) => {
-//     if (err) {
-//       console.error('Error fetching user preferences:', err);
-//       return res.status(500).send('Error fetching user preferences');
-//     }
-
-//     const userPreferences = userPrefs.docs.reduce((acc, pref) => {
-//       acc[pref.type] = acc[pref.type] || [];
-//       acc[pref.type].push(pref.preference);
-//       return acc;
-//     }, {});
-
-//     const ranksDoc = userPrefs.docs.find(pref => pref.type === 'ranks');
-//     const ranks = ranksDoc ? ranksDoc.ranks : {};
-//     const rankPoints = { 1: 40, 2: 30, 3: 20, 4: 10 };
-
-//     productsDB.list({ include_docs: true }, (err, products) => {
-//       if (err) {
-//         console.error('Error fetching products:', err);
-//         return res.status(500).send('Error fetching products');
-//       }
-
-//       const recommendations = products.rows
-//         .filter(row => row.doc.Gender === gender) // Filter by gender
-//         .map(row => {
-//           const product = row.doc;
-//           let score = 0;
-
-//           // Scoring logic
-//           if (userPreferences.brand && userPreferences.brand.includes(product.Brand)) {
-//             score += rankPoints[ranks.brand] || 0;
-//           }
-//           if (userPreferences.category && userPreferences.category.includes(product.Category)) {
-//             score += rankPoints[ranks.category] || 0;
-//           }
-//           if (userPreferences.pattern && userPreferences.pattern.includes(product.Print_or_Pattern_Type)) {
-//             score += rankPoints[ranks.pattern] || 0;
-//           }
-//           if (product.Original_Price <= userPreferences.price) {
-//             score += rankPoints[ranks.price] || 0;
-//           }
-
-//           return { product, score };
-//         })
-//         .filter(item => item.score > 50) // Filter out products with a score of 70 or less
-
-//       res.status(200).json(recommendations);
-//     });
-//   });
-// });
 app.post('/save-preferences', (req, res) => {
   const { name, brands, categories, patterns, ranks } = req.body;
 
@@ -163,6 +88,8 @@ app.post('/save-preferences', (req, res) => {
   });
 });
 
+const rankPoints = { 1: 40, 2: 30, 3: 20, 4: 10 };
+
 app.get('/recommendations', (req, res) => {
   const { name, gender } = req.query;
 
@@ -173,6 +100,9 @@ app.get('/recommendations', (req, res) => {
       return res.status(500).send('Error fetching user preferences');
     }
 
+    const ranksDoc = userPrefs.docs.find(pref => pref.type === 'ranks');
+    const ranks = ranksDoc ? ranksDoc.ranks : {};
+
     // Fetch purchase history
     purchasesDB.find({ selector: { user: name } }, (err, purchases) => {
       if (err) {
@@ -180,7 +110,6 @@ app.get('/recommendations', (req, res) => {
         return res.status(500).send('Error fetching purchase history');
       }
 
-      console.log('Fetched purchases:', purchases.docs);
 
       const purchaseHistory = purchases.docs.reduce((acc, purchase) => {
         acc.brands[purchase.Brand] = (acc.brands[purchase.Brand] || 0) + 1;
@@ -190,13 +119,13 @@ app.get('/recommendations', (req, res) => {
         return acc;
       }, { brands: {}, patterns: {}, categories: {}, prices: [] });
 
-      console.log('Processed purchase history:', purchaseHistory);
 
       // Extract additional preferences from purchase history
       const topBrands = Object.entries(purchaseHistory.brands).sort((a, b) => b[1] - a[1]).slice(0, 2).map(item => item[0]);
       const topPatterns = Object.entries(purchaseHistory.patterns).sort((a, b) => b[1] - a[1]).slice(0, 2).map(item => item[0]);
       const topCategories = Object.entries(purchaseHistory.categories).sort((a, b) => b[1] - a[1]).slice(0, 2).map(item => item[0]);
-      const maxPrice = Math.max(...purchaseHistory.prices);
+      const maxPrice = purchaseHistory.prices.length > 0 ? Math.max(...purchaseHistory.prices) : null;
+
 
       const additionalPreferences = [
         ...topBrands.map(brand => ({ _id: `${name}-${brand}`, user: name, preference: brand, type: 'brand' })),
@@ -205,55 +134,69 @@ app.get('/recommendations', (req, res) => {
         { _id: `${name}-price`, user: name, preference: maxPrice, type: 'price' }
       ];
 
-      // Save additional preferences to userPrefDB
-      userPrefDB.bulk({ docs: additionalPreferences }, (err, result) => {
-        if (err) {
-          console.error('Error saving additional preferences:', err);
-          return res.status(500).send('Error saving additional preferences');
-        }
 
-        console.log('Additional preferences saved:', result);
+      // Filter out preferences that already exist
+      const existingPreferences = new Set(userPrefs.docs.map(pref => pref._id));
+      const newPreferences = additionalPreferences.filter(pref => !existingPreferences.has(pref._id));
 
-        // Fetch products and calculate recommendations
-        productsDB.list({ include_docs: true }, (err, products) => {
+      // Save new preferences to userPrefDB
+      if (newPreferences.length > 0) {
+        userPrefDB.bulk({ docs: newPreferences }, (err, result) => {
           if (err) {
-            console.error('Error fetching products:', err);
-            return res.status(500).send('Error fetching products');
+            console.error('Error saving new preferences:', err);
+            return res.status(500).send('Error saving new preferences');
           }
 
-          const recommendations = products.rows
-            .filter(row => row.doc.Gender.toLowerCase() === gender.toLowerCase())
-            .map(row => {
-              const product = row.doc;
-              let score = 0;
-
-              // Scoring logic
-              if (userPrefs.docs.find(pref => pref.type === 'brand' && pref.preference === product.Brand)) {
-                score += rankPoints[ranks.brand] || 0;
-              }
-              if (userPrefs.docs.find(pref => pref.type === 'category' && pref.preference === product.Category)) {
-                score += rankPoints[ranks.category] || 0;
-              }
-              if (userPrefs.docs.find(pref => pref.type === 'pattern' && pref.preference === product.Print_or_Pattern_Type)) {
-                score += rankPoints[ranks.pattern] || 0;
-              }
-              if (typeof userPrefs.docs.find(pref => pref.type === 'price')?.preference === 'number' && product.Original_Price <= userPrefs.docs.find(pref => pref.type === 'price')?.preference) {
-                score += rankPoints[ranks.price] || 0;
-              }
-
-              return { product, score };
-            })
-            .filter(item => item.score > 50); // Filter out products with a score of 50 or less
-
-          console.log('Recommendations:', recommendations);
-
-          res.status(200).json(recommendations);
+          console.log('New preferences saved:', result);
         });
+      } else {
+        console.log('No new preferences to save.');
+      }
+
+      // Fetch products and calculate recommendations
+      productsDB.list({ include_docs: true }, (err, products) => {
+        if (err) {
+          console.error('Error fetching products:', err);
+          return res.status(500).send('Error fetching products');
+        }
+
+        const recommendations = products.rows
+          .filter(row => row.doc.Gender.toLowerCase() === gender.toLowerCase())
+          .map(row => {
+            const product = row.doc;
+            let score = 0;
+
+            // Scoring logic with debugging
+            const brandMatch = userPrefs.docs.find(pref => pref.type === 'brand' && pref.preference === product.Brand);
+            const categoryMatch = userPrefs.docs.find(pref => pref.type === 'category' && pref.preference === product.Category);
+            const patternMatch = userPrefs.docs.find(pref => pref.type === 'pattern' && pref.preference === product.Print_or_Pattern_Type);
+            const priceMatch = userPrefs.docs.find(pref => pref.type === 'price')?.preference;
+
+            if (brandMatch) {
+              score += rankPoints[ranks.brand] || 0;
+            }
+            if (categoryMatch) {
+              score += rankPoints[ranks.category] || 0;
+            }
+            if (patternMatch) {
+              score += rankPoints[ranks.pattern] || 0;
+            }
+            if (typeof priceMatch === 'number' && product.Original_Price <= priceMatch) {
+              score += rankPoints[ranks.price] || 0;
+            }
+
+            return { product, score };
+          });
+
+
+        const filteredRecommendations = recommendations.filter(item => item.score >= 60); // Filter out products with a score less than or equal to 60
+
+
+        res.status(200).json(filteredRecommendations);
       });
     });
   });
 });
-
 
 
 const colorCombinations = {
