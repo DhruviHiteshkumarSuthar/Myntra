@@ -1,4 +1,4 @@
-# 🛍️ Trend-Driven Product Recommendation Model with Outfit-Builder  
+# 🛍️ Trend-Driven Product Recommendation System with Outfit-Builder  
 
 ## 📌 Overview  
 This project features a **trend-driven product recommendation model** designed to suggest personalized products based on users' **purchase history** and **preferences**. Additionally, it includes an **Outfit-Builder** feature that allows users to assemble a complete outfit based on an occasion.  
