@@ -1,36 +1,31 @@
-## Important Note
-- The URL in the code is an expired API URL used only for demonstration purposes.
-- In a real-world scenario, sensitive data like API keys should be stored securely using environment variables or GitHub Secrets.
-   
-## Trend-Driven Product Recommendation Model with Outfit-Builder
-This project features a trend-driven product recommendation model designed to suggest personalized products based on users' purchase history and preferences. Additionally, it includes an Outfit-Builder feature that allows users to search for a complete outfit by just selecting the occasion.
+# 🛍️ Trend-Driven Product Recommendation Model with Outfit-Builder  
 
-## 🛠️ Technologies Used
-- Node.js: Backend development for handling database logic and API requests.
+## 📌 Overview  
+This project features a **trend-driven product recommendation model** designed to suggest personalized products based on users' **purchase history** and **preferences**. Additionally, it includes an **Outfit-Builder** feature that allows users to assemble a complete outfit based on an occasion.  
 
-- HTML, CSS, JavaScript: Frontend for creating a responsive user interface.
+## ⚠️ Important Note  
+- The API URL in the code is an **expired URL**, used only for demonstration purposes.  
+- In a real-world scenario, sensitive data such as API keys should be **stored securely** using environment variables or GitHub Secrets.  
 
-- IBM Cloudant: NoSQL database used to store user preferences, purchase history, and product data.
+## 🛠️ Technologies Used  
+- **Node.js** – Backend development for handling database logic and API requests.  
+- **HTML, CSS, JavaScript** – Frontend for creating a responsive user interface.  
+- **IBM Cloudant** – NoSQL database for storing user preferences, purchase history, and product data.  
+- **Docker** – Containerization for easy deployment and scalability.  
+- **IBM Code Engine** – Application hosting.  
 
-- Docker: Containerization for easy deployment and scalability.
+## 🚀 Features  
 
-- IBM Code Engine: Application hosting.
+### 🔹 **Trend-Driven Recommendations**  
+- Provides **personalized product suggestions** based on user behavior.  
+- Analyzes **purchase history and liked products** to improve recommendations.  
 
-## 📌 Features
-- Trend-Driven Recommendations:
+### 🔹 **Outfit-Builder**  
+- Allows users to **select an occasion** and receive **curated clothing item suggestions**.  
 
-  - Personalized product suggestions.
-  
-  - Analyzes user purchase history and liked products.
+### 🔹 **User Preferences Management**  
+- Users can **dislike products** to receive more relevant suggestions in the future.  
 
-- Outfit-Builder:
-
-  - Allows users to select occasion and get combined clothing items.
-
-
-- User Preferences Management:
-
-  - Users can dislike the products to receive more relevant suggestions.
- 
-## 📖 Future Enhancements
-- To create a machine learning model for this system.
+## 📖 Future Enhancements  
+- **Implement machine learning models** to improve recommendation accuracy.  
+- **Enhance user experience** by incorporating AI-driven trend analysis.  
