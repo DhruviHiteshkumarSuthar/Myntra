@@ -14,7 +14,7 @@ This project features a trend-driven product recommendation model designed to su
 
 - Docker: Containerization for easy deployment and scalability.
 
-- IBM Code Engine: Application hosting and database management
+- IBM Code Engine: Application hosting.
 
 ## 📌 Features
 - Trend-Driven Recommendations:
